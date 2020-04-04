@@ -24,9 +24,12 @@ class RoleInfo(View):
 
 def user_del(request,uid):
 
-    User.objects.filter(id=uid).first().delete()
-
-    return redirect('rbac:user_list')
+    if request.method == 'GET':
+        # id = request.GET.get('id')
+        # print(id)
+        User.objects.filter(id=uid).first().delete()
+        # print(request)
+        return redirect('rbac:user_list')
 
 
 

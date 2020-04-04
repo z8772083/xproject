@@ -46,11 +46,12 @@
                   <td>{{ user.get_gender_display }}</td>
                   <td>{{ user.telephone }}</td>
                   <td>{{ user.role }}</td>
-                  <td><a href="{% url 'rbac:user_edit' user.id %}" class="btn btn-primary">编辑</a>  <a href="{% url 'rbac:user_del' user.id %}" class="btn btn-primary" role="button">删除</a></td>
+                  <td><a href="{% url 'rbac:user_edit' user.id %}" class="btn btn-primary">编辑</a>
+                      <a href="{% url 'rbac:user_del' user.id %}" class="btn btn-primary" role="button">删除</a></td>
                   </td>
                 </tr>
             {% endfor %}
-            <a href="{% url 'rbac:user_batch_del'%}" class="btn btn-primary" role="button">批量删除</a>
+
             </tbody>
 
           </table>
