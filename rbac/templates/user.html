@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}用户管理{% endblock %}
+{% block css %}{% endblock %}
+
+{% block breadcrumb %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        用户管理
+      </h1>
+
+    </section>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+        <div class="box">
+
+        <!-- /.box-header -->
+        <div class="box-body">
+        <a href="{% url 'rbac:user_add' %}" class="btn btn-primary">添加</a>
+          <table id="user_table" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>id</th>
+              <th>姓名</th>
+              <th>年龄</th>
+              <th>性别</th>
+              <th>电话</th>
+              <th>角色</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+             {% for user in users %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.age }}</td>
+                  <td>{{ user.get_gender_display }}</td>
+                  <td>{{ user.telephone }}</td>
+                  <td>{{ user.role }}</td>
+                  <td><a href="{% url 'rbac:user_edit' user.id %}" class="btn btn-primary">编辑</a>  <a href="{% url 'rbac:user_del' user.id %}" class="btn btn-primary" role="button">删除</a></td>
+                  </td>
+                </tr>
+            {% endfor %}
+            <a href="{% url 'rbac:user_batch_del'%}" class="btn btn-primary" role="button">批量删除</a>
+            </tbody>
+
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+        </div>
+    <!-- /.col -->
+      </div>
+    <!-- /.row -->
+    </section>
+
+
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{% static 'adminlet-2.4.10/bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'adminlet-2.4.10/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+
+<script>
+$(function () {
+        $('#user_table').DataTable({
+          "paging": true,       <!-- 允许分页 -->
+          "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+          "searching": true,    <!-- 允许内容搜索 -->
+          "ordering": true,     <!-- 允许排序 -->
+          "info": true,         <!-- 显示信息 -->
+          "autoWidth": false    <!-- 固定宽度 -->
+        });
+      });
+</script>
+
+
+{% endblock %}

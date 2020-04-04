@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}添加用户{% endblock %}
+{% block css %}{% endblock %}
+
+{% block breadcrumb %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header" xmlns="http://www.w3.org/1999/html">
+      <h1>
+        添加用户
+      </h1>
+
+    </section>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+        <div class="box">
+
+        <!-- /.box-header -->
+        <div class="box-body" >
+        <form method="post" class="">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>{{ field.label }} {{ field }} {{ field.errors.0 }}</div>
+            {% endfor %}
+            <input type="submit" value="确认" class="btn btn-primary"></input>
+            <a href="/rbac/user/list" class="btn btn-primary">取消</a>
+        </form>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+        </div>
+    <!-- /.col -->
+      </div>
+    <!-- /.row -->
+    </section>
+
+
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{% static 'adminlet-2.4.10/bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'adminlet-2.4.10/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+
+
+
+
+{% endblock %}
