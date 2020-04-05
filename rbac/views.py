@@ -3,7 +3,7 @@ from django.http import JsonResponse,HttpResponse
 from django.views import View
 from rbac.models import User,Role
 from rbac.forms import UserForm
-
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 class UserInfo(View):
@@ -11,8 +11,13 @@ class UserInfo(View):
     def get(self,request):
 
         users = User.objects.all()
-        print('111')
+
         return render(request, 'user.html', {'users':users})
+
+    def post(self,request):
+
+        data= request.POST['case']
+        print(data)
 
 class RoleInfo(View):
 
@@ -22,14 +27,18 @@ class RoleInfo(View):
         print('111')
         return render(request, 'role.html', locals())
 
-def user_del(request,uid):
+def user_del(request):
 
     if request.method == 'GET':
-        # id = request.GET.get('id')
-        # print(id)
+        uid = request.GET.get('uid')
+
         User.objects.filter(id=uid).first().delete()
-        # print(request)
-        return redirect('rbac:user_list')
+        # # print(request)
+        # return redirect('rbac:user_list')
+        data = {
+            'deleted': True
+        }
+        return JsonResponse(data)
 
 
 
@@ -56,9 +65,18 @@ def user_add(request):
             return redirect('rbac:user_list')
         else:
             return redirect('rbac:user_list',{'form':form})
+
     return render(request, 'user_add.html', {'form':form})
 
-
-
+@csrf_exempt
 def user_batch_del(request):
-    pass
+
+
+    checkval =  (request.POST.getlist('checkval'))
+
+    for uid in checkval:
+        User.objects.filter(id=uid).first().delete()
+    data = {
+        'deleted': True
+    }
+    return JsonResponse(data)

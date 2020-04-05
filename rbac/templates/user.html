@@ -24,10 +24,12 @@
 
         <!-- /.box-header -->
         <div class="box-body">
-        <a href="{% url 'rbac:user_add' %}" class="btn btn-primary">添加</a>
-          <table id="user_table" class="table table-bordered table-striped">
+            <a href="{% url 'rbac:user_add' %}" class="btn btn-primary">添加</a>
+            <button id="batch-del" type="submit" class="btn btn-danger" onclick="BatchUserDelete()" >批量删除</button>
+          <table id="userTable" class="table table-bordered table-striped">
             <thead>
             <tr>
+              <th><input type="checkbox" id="selectall"/></th>
               <th>id</th>
               <th>姓名</th>
               <th>年龄</th>
@@ -39,7 +41,8 @@
             </thead>
             <tbody>
              {% for user in users %}
-                <tr>
+                <tr id="user-{{ user.id }}">
+                  <td align="center"><input type="checkbox" class="case" name="case" value="{{ user.id }}" /></td>
                   <td>{{ user.id }}</td>
                   <td>{{ user.name }}</td>
                   <td>{{ user.age }}</td>
@@ -47,7 +50,7 @@
                   <td>{{ user.telephone }}</td>
                   <td>{{ user.role }}</td>
                   <td><a href="{% url 'rbac:user_edit' user.id %}" class="btn btn-primary">编辑</a>
-                      <a href="{% url 'rbac:user_del' user.id %}" class="btn btn-primary" role="button">删除</a></td>
+                      <a href="javascript:void(0)"  onclick="deleteUser({{ user.id }})" class="btn btn-primary" role="button">删除</a></td>
                   </td>
                 </tr>
             {% endfor %}
@@ -55,6 +58,7 @@
             </tbody>
 
           </table>
+
         </div>
         <!-- /.box-body -->
       </div>
@@ -76,7 +80,7 @@
 
 <script>
 $(function () {
-        $('#user_table').DataTable({
+        $('#userTable').DataTable({
           "paging": true,       <!-- 允许分页 -->
           "lengthChange": true, <!-- 允许改变每页显示的行数 -->
           "searching": true,    <!-- 允许内容搜索 -->
@@ -85,6 +89,91 @@ $(function () {
           "autoWidth": false    <!-- 固定宽度 -->
         });
       });
+</script>
+
+<script>
+
+function deleteUser(uid) {
+  var action = confirm("确定要删除这个用户吗?");
+  if (action != false) {
+    $.ajax({
+        url: '{% url 'rbac:user_del' %}',
+        data: {
+            'uid': uid,
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.deleted) {
+              $("#userTable #user-" + uid).remove();
+            }
+        }
+    });
+  }
+}
+</script>
+
+<script>
+function BatchUserDelete() {
+  var checkval = new  Array()
+  var checked=$("input[name='case']:checked");
+  console.log(checked)
+  for(var i=0;i<checked.length;i++)
+  {
+      {#checked[i].value;#}
+      {#checkval += $(checked[i]).val() + ',';#}
+      checkval[i] = $(checked[i]).val();
+    };
+  console.log(checkval)
+  if(checked.length == 0){
+    alert("至少选中一个用户");
+    return false;
+
+  }
+  var action = confirm("确定要删除这批用户吗?");
+  if (action != false) {
+    $.ajax({
+        url: '{% url 'rbac:user_batch_del' %}',
+        type: 'POST',
+        data: {'checkval':checkval},
+        dataType: 'json',
+        traditional :true,
+        success: function (data) {
+            if (data.deleted) {
+                for (var uid in checkval) {
+                    console.log(uid)
+                    $("#userTable #user-" + checkval[uid]).remove();
+                }
+            }
+        }
+    });
+  }
+}
+
+</script>
+
+<script>
+$(function(){
+
+	// add multiple select / deselect functionality
+	$("#selectall").click(function () {
+		  $('.case').attr('checked', this.checked);
+	});
+
+	// if all checkbox are selected, check the selectall checkbox
+	// and viceversa
+	$(".case").click(function(){
+
+		if($(".case").length == $(".case:checked").length) {
+			$("#selectall").attr("checked", "checked");
+		} else {
+			$("#selectall").removeAttr("checked");
+		}
+
+	});
+});
+
+
+
 </script>
 
 
