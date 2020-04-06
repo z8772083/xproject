@@ -31,13 +31,16 @@ class Chat(View):
 
     def post(self,request):
         print('@@@@@@@@@@@@@@@@@@')
-        user=request.user
+        user_group = str(request.user) + '_ws_rbac_chat_'
+        print(user_group)
         content = request.POST.get('content')
-        # print(content)
+        print(content)
         # print(request.POST['content'])
+
+        # user_group = '{user}_{path}'.format(user=user,path=path)
         for x in range(int(content)):
             out = "正在打印第{num}个数字".format(num=x)
-            consumers.SendMsg(user,message=out)
+            consumers.SendMsg(user_group,message=out)
 
         data = {
             'received': True

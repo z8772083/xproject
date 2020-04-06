@@ -6,8 +6,8 @@ application = ProtocolTypeRouter({
     # (http->django views is added by default)
     'websocket': AuthMiddlewareStack(
         URLRouter(
-            chat.routing.websocket_urlpatterns,
-            # rbac.routing.websocket_urlpatterns
+            # chat.routing.websocket_urlpatterns,
+            rbac.routing.websocket_urlpatterns
         )
     ),
 })
