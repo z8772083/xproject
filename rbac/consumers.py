@@ -4,7 +4,7 @@ from channels.layers import get_channel_layer
 from rbac.models import  CR
 import json
 
-class ChatConsumer(AsyncWebsocketConsumer):
+class RbacConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         print('连接成功')
