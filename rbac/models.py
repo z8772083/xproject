@@ -26,3 +26,9 @@ class Role(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class CR(models.Model):
+
+    user = models.CharField(max_length=20)
+    channel = models.CharField(max_length=30)

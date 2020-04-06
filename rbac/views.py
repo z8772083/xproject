@@ -4,6 +4,10 @@ from django.views import View
 from rbac.models import User,Role
 from rbac.forms import UserForm
 from django.views.decorators.csrf import csrf_exempt
+from . import consumers
+from django.utils.safestring import mark_safe
+import json
+
 # Create your views here.
 
 class UserInfo(View):
@@ -19,13 +23,30 @@ class UserInfo(View):
         data= request.POST['case']
         print(data)
 
-class RoleInfo(View):
+class Chat(View):
 
     def get(self,request):
+        return render(request, 'chat.html')
 
-        roles = Role.objects.all()
-        print('111')
-        return render(request, 'role.html', locals())
+
+    def post(self,request):
+        print('@@@@@@@@@@@@@@@@@@')
+        user=request.user
+        content = request.POST.get('content')
+        # print(content)
+        # print(request.POST['content'])
+        for x in range(int(content)):
+            out = "正在打印第{num}个数字".format(num=x)
+            consumers.SendMsg(user,message=out)
+
+        data = {
+            'received': True
+        }
+        # print(request.POST)
+        return JsonResponse(data)
+
+
+
 
 def user_del(request):
 

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}聊天室{% endblock %}
+{% block css %}{% endblock %}
+
+{% block breadcrumb %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        聊天室
+      </h1>
+
+    </section>
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-6" id="tab_2">
+
+      <div class="box-body">
+
+           <input type="text" class="form-control" id="content" placeholder="请输入一个整数">
+          <button type="submit" class="btn btn-primary" onclick="send_chat()" >发送</button>
+
+      </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>日志</label>
+            <textarea  id="chat-log" class="form-control" cols="100" rows="20" placeholder="操作日志.." disabled=""></textarea>
+        </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+
+
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/rbac/chat/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+
+        document.querySelector('#chat-log').value += (message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+
+</script>
+
+
+
+<script>
+
+function send_chat() {
+    var content  = $("#content").val()
+    document.querySelector('#chat-log').value = "";
+    $.ajax({
+        url: '{% url 'rbac:chat' %}',
+        type: 'POST',
+        data: {
+            'content': content,
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.received) {
+              confirm("数据已经处理完")
+            }
+        }
+    });
+
+}
+
+</script>
+
+
+{% endblock %}
