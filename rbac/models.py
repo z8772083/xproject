@@ -6,6 +6,11 @@ class User(models.Model):
         (0,'男'),
         (1,'女')
     )
+    project_choice=(
+        ('g','G项目'),
+        ('l','L项目'),
+        ('r','R项目')
+    )
 
     name = models.CharField(max_length=30,unique=True,verbose_name='姓名')
 
@@ -16,6 +21,8 @@ class User(models.Model):
     telephone = models.IntegerField(verbose_name='电话')
 
     role=models.ForeignKey(to='Role',on_delete=models.CASCADE)
+
+    project = models.CharField(choices=project_choice,max_length=20,verbose_name='项目')
 
     def __str__(self):
         return self.name

@@ -64,6 +64,12 @@ def user_del(request):
         }
         return JsonResponse(data)
 
+def proj_index(request,proj):
+    users = User.objects.filter(project=proj).all()
+    proj_url = proj
+
+    return  render(request,'user.html',locals())
+
 
 
 def user_edit(request,uid):
